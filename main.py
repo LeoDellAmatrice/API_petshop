@@ -41,22 +41,29 @@ def produtos():
         case _:
             pass
 
-    filtro_asc = request.args.get('filtro_asc', '')
-    filtro_desc = request.args.get('filtro_desc', '')
+    filtro_asc = request.args.get('preco_asc', '')
+    filtro_desc = request.args.get('preco_desc', '')
     filtro_description = request.args.get('description_part', '')
 
-    print(filtro_asc)
-    print(filtro_desc)
-    print(filtro_description)
 
-    dict_filtro = [
-        [product for product in dict_produtos if filtro_description and filtro_description in product['product_description']]
-    ]
+    dict_filtro = []
+
+    if filtro_description:
+        dict_filtro = [
+            product for product in dict_produtos if filtro_description and filtro_description in product['product_description']
+        ]
+
 
     if filtro_asc:
-        dict_filtro = sorted(dict_produtos, key=lambda k: k['product_price'])
+        if dict_filtro:
+            dict_filtro = sorted(dict_filtro, key=lambda k: k['product_price'])
+        else:
+            dict_filtro = sorted(dict_produtos, key=lambda k: k['product_price'])
     elif filtro_desc:
-        dict_filtro = sorted(dict_produtos, key=lambda k: k['product_price'], reverse=True)
+        if dict_filtro:
+            dict_filtro = sorted(dict_filtro, key=lambda k: k['product_price'], reverse=True)
+        else:
+            dict_filtro = sorted(dict_produtos, key=lambda k: k['product_price'], reverse=True)
 
 
     if dict_filtro:
